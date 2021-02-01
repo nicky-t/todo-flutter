@@ -1,12 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/model/task.dart';
+import 'package:todo_flutter/widgets/BottomSheet/add_tasks_bottom_sheet.dart';
 import 'package:todo_flutter/widgets/tasks_list.dart';
 
-class TasksScreen extends StatelessWidget {
+class TasksScreen extends StatefulWidget {
+  @override
+  _TasksScreenState createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+  List<Task> tasks = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.lightBlueAccent,
       floatingActionButton: FloatingActionButton(
+        onPressed: () => showModalBottomSheet(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20),
+              topLeft: Radius.circular(20),
+            ),
+          ),
+          isScrollControlled: true,
+          context: context,
+          builder: (context) => SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: AddTasksBottomSheet(onPressAddTaskButton: (taskText) {
+                setState(() {
+                  tasks.add(Task(name: taskText));
+                });
+                Navigator.pop(context);
+              }),
+            ),
+          ),
+        ),
         backgroundColor: Colors.lightBlueAccent,
         child: Icon(Icons.add),
       ),
@@ -58,7 +89,14 @@ class TasksScreen extends StatelessWidget {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: TasksList(),
+              child: TasksList(
+                tasks: tasks,
+                onPressCheckBox: (checkBoxState, index) {
+                  setState(() {
+                    tasks[index].changeIsChecked();
+                  });
+                },
+              ),
             ),
           ),
         ],
