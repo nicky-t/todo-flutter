@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_flutter/model/task_data.dart';
 
 class AddTasksBottomSheet extends StatefulWidget {
-  AddTasksBottomSheet({this.onPressAddTaskButton});
-
-  final Function onPressAddTaskButton;
-
   @override
   _AddTasksBottomSheetState createState() => _AddTasksBottomSheetState();
 }
@@ -44,7 +42,8 @@ class _AddTasksBottomSheetState extends State<AddTasksBottomSheet> {
           FlatButton(
             color: Colors.lightBlueAccent,
             onPressed: () {
-              widget.onPressAddTaskButton(taskText);
+              Provider.of<TaskData>(context, listen: false).addTask(taskText);
+              Navigator.pop(context);
             },
             child: Text(
               'Add',

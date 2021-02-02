@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo_flutter/model/task.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_flutter/model/task_data.dart';
 import 'package:todo_flutter/widgets/BottomSheet/add_tasks_bottom_sheet.dart';
 import 'package:todo_flutter/widgets/tasks_list.dart';
 
@@ -9,8 +10,6 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-  List<Task> tasks = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,12 +28,7 @@ class _TasksScreenState extends State<TasksScreen> {
             child: Container(
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: AddTasksBottomSheet(onPressAddTaskButton: (taskText) {
-                setState(() {
-                  tasks.add(Task(name: taskText));
-                });
-                Navigator.pop(context);
-              }),
+              child: AddTasksBottomSheet(),
             ),
           ),
         ),
@@ -70,7 +64,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   ),
                 ),
                 Text(
-                  '12 tasks',
+                  '${Provider.of<TaskData>(context).taskCount} tasks',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -89,14 +83,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: TasksList(
-                tasks: tasks,
-                onPressCheckBox: (checkBoxState, index) {
-                  setState(() {
-                    tasks[index].changeIsChecked();
-                  });
-                },
-              ),
+              child: TasksList(),
             ),
           ),
         ],

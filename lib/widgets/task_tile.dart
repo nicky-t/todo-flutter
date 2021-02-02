@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_flutter/model/task.dart';
+import 'package:todo_flutter/model/task_data.dart';
 
 class TaskTile extends StatelessWidget {
-  TaskTile({this.isChecked, this.taskTitle, this.onPressCheckBox});
+  TaskTile({this.task});
 
-  final bool isChecked;
-  final String taskTitle;
-  final Function onPressCheckBox;
+  final Task task;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onLongPress: () {
+        Provider.of<TaskData>(context, listen: false).removeTask(task);
+      },
       title: Text(
-        taskTitle,
+        task.name,
         style: TextStyle(
-          decoration: isChecked ? TextDecoration.lineThrough : null,
+          decoration: task.isChecked ? TextDecoration.lineThrough : null,
         ),
       ),
       trailing: Checkbox(
-        value: isChecked,
+        value: task.isChecked,
         activeColor: Colors.lightBlueAccent,
-        onChanged: onPressCheckBox,
+        onChanged: (value) {
+          Provider.of<TaskData>(context, listen: false)
+              .changeCheckBoxState(task);
+        },
       ),
     );
   }
